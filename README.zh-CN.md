@@ -29,6 +29,17 @@ https://github.com/chenggang928/htmlppt-player/releases/latest
 
 目前安装包还没有签名。macOS Gatekeeper 或 Windows SmartScreen 第一次打开时可能会提示安全警告。
 
+### macOS 首次打开
+
+当前 macOS 包还没有签名和 notarization。如果系统提示“已损坏，无法打开”或“无法验证开发者”，先把 app 拖到 `/Applications`，然后运行：
+
+```bash
+xattr -dr com.apple.quarantine "/Applications/HtmlPPT Player.app"
+open "/Applications/HtmlPPT Player.app"
+```
+
+也可以在第一次打开失败后，到 `System Settings > Privacy & Security` 里尝试点击 `Open Anyway`。
+
 ## 怎么使用
 
 1. 下载并打开 HtmlPPT Player。

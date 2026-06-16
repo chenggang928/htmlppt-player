@@ -29,6 +29,17 @@ Available builds:
 
 Current builds are unsigned. macOS Gatekeeper or Windows SmartScreen may show a warning on first open.
 
+### macOS First Open
+
+The current macOS build is not signed or notarized yet. If macOS says the app is damaged or cannot be verified, move the app to `/Applications`, then run:
+
+```bash
+xattr -dr com.apple.quarantine "/Applications/HtmlPPT Player.app"
+open "/Applications/HtmlPPT Player.app"
+```
+
+You can also try `System Settings > Privacy & Security > Open Anyway` after the first failed open.
+
 ## How To Use
 
 1. Download and open HtmlPPT Player.
