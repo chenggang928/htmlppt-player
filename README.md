@@ -31,14 +31,24 @@ Current builds are unsigned. macOS Gatekeeper or Windows SmartScreen may show a 
 
 ### macOS First Open
 
-The current macOS build is not signed or notarized yet. If macOS says the app is damaged or cannot be verified, move the app to `/Applications`, then run:
+The current macOS build is not signed or notarized yet. If macOS blocks the app, use one of these options.
+
+Option A: approve it in System Settings:
+
+1. Drag `HtmlPPT Player.app` into `/Applications`.
+2. Double-click the app once. If macOS blocks it, click Cancel.
+3. Open `System Settings > Privacy & Security`.
+4. Scroll to `Security`, find the blocked `HtmlPPT Player` message, then click `Open Anyway`.
+5. Confirm by clicking `Open`.
+
+Apple says the `Open Anyway` button is available for about an hour after you try to open the app.
+
+Option B: remove the quarantine flag in Terminal:
 
 ```bash
 xattr -dr com.apple.quarantine "/Applications/HtmlPPT Player.app"
 open "/Applications/HtmlPPT Player.app"
 ```
-
-You can also try `System Settings > Privacy & Security > Open Anyway` after the first failed open.
 
 ## How To Use
 

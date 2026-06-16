@@ -31,14 +31,24 @@ https://github.com/chenggang928/htmlppt-player/releases/latest
 
 ### macOS 首次打开
 
-当前 macOS 包还没有签名和 notarization。如果系统提示“已损坏，无法打开”或“无法验证开发者”，先把 app 拖到 `/Applications`，然后运行：
+当前 macOS 包还没有签名和 notarization。如果系统提示“已损坏，无法打开”或“无法验证开发者”，可以用下面任一方式处理。
+
+方式 A：在系统设置里手动允许：
+
+1. 先把 `HtmlPPT Player.app` 拖到 `/Applications`。
+2. 双击打开一次；如果 macOS 拦截，点取消。
+3. 打开 `System Settings > Privacy & Security`。
+4. 滚动到 `Security`，找到 `HtmlPPT Player` 被阻止的提示，点击 `Open Anyway` / `仍要打开`。
+5. 再次确认 `Open` / `打开`。
+
+Apple 官方说明里也提到，`Open Anyway` 通常只会在你尝试打开 App 后约一小时内出现。
+
+方式 B：用终端移除 quarantine 标记：
 
 ```bash
 xattr -dr com.apple.quarantine "/Applications/HtmlPPT Player.app"
 open "/Applications/HtmlPPT Player.app"
 ```
-
-也可以在第一次打开失败后，到 `System Settings > Privacy & Security` 里尝试点击 `Open Anyway`。
 
 ## 怎么使用
 
