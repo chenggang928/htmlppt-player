@@ -37,11 +37,11 @@ https://github.com/chenggang928/htmlppt-player/releases/latest
 
 1. 先把 `HtmlPPT Player.app` 拖到 `/Applications`。
 2. 双击打开一次；如果 macOS 拦截，点取消。
-3. 打开 `System Settings > Privacy & Security`。
-4. 滚动到 `Security`，找到 `HtmlPPT Player` 被阻止的提示，点击 `Open Anyway` / `仍要打开`。
-5. 再次确认 `Open` / `打开`。
+3. 打开 `系统设置 > 隐私与安全性`。
+4. 滚动到 `安全性`，找到 `HtmlPPT Player` 被阻止的提示，点击 `仍要打开`。
+5. 再次确认 `打开`。
 
-Apple 官方说明里也提到，`Open Anyway` 通常只会在你尝试打开 App 后约一小时内出现。
+Apple 官方说明里也提到，`仍要打开` 按钮通常只会在你尝试打开 App 后约一小时内出现。
 
 方式 B：用终端移除 quarantine 标记：
 
