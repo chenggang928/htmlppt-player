@@ -12,12 +12,14 @@
     "test:watch": "vitest",
     "preview": "electron-vite preview",
     "pack:mac": "npm run build && electron-builder --mac --dir",
-    "dist:mac": "npm run build && electron-builder --mac dmg"
+    "dist:mac": "npm run build && electron-builder --mac dmg",
+    "pack:win": "npm run build && electron-builder --win --dir --x64",
+    "dist:win": "npm run build && electron-builder --win nsis --x64",
+    "dist:win:zip": "npm run build && electron-builder --win zip --x64"
   },
   "build": {
     "appId": "app.htmlppt.player",
     "productName": "HtmlPPT Player",
-    "electronDist": "node_modules/electron/dist",
     "electronVersion": "33.4.11",
     "directories": {
       "output": "release"
@@ -32,6 +34,24 @@
       "target": [
         "dir"
       ]
+    },
+    "win": {
+      "icon": "assets/icon/icon.ico",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "perMachine": false,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
     },
     "fileAssociations": [
       {

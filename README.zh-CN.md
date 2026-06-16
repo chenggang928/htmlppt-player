@@ -124,6 +124,22 @@ npm run pack:mac
 npm run dist:mac
 ```
 
+在 Windows 或 GitHub Actions 上生成 Windows 安装器：
+
+```bash
+npm run dist:win
+```
+
+Windows `.exe` 安装器最推荐在 Windows 机器或仓库内置的 GitHub Actions
+workflow 上生成。macOS 可以尝试部分交叉打包目标，但安装器生成可能需要额外
+Windows 打包工具。
+
+生成 Windows 免安装 zip：
+
+```bash
+npm run dist:win:zip
+```
+
 在播放器中打开公开 demo：
 
 ```text

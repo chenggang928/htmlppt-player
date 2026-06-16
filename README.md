@@ -125,6 +125,22 @@ Create a macOS release artifact:
 npm run dist:mac
 ```
 
+Create a Windows installer on Windows or GitHub Actions:
+
+```bash
+npm run dist:win
+```
+
+Windows `.exe` installers are best built on a Windows machine or the included
+GitHub Actions workflow. macOS can be used for some cross-build targets, but
+installer generation may require extra Windows packaging tools.
+
+Create a Windows portable zip:
+
+```bash
+npm run dist:win:zip
+```
+
 Open the demo deck from the app:
 
 ```text
