@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HtmlPPT Minimal Deck</title>
+    <style>
+      :root {
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        color: #172026;
+        background: #ffffff;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        background: #ffffff;
+      }
+
+      .deck {
+        width: 100%;
+      }
+
+      .slide {
+        width: 100vw;
+        height: 100vh;
+        padding: 64px 72px;
+        overflow: hidden;
+        display: grid;
+        align-content: center;
+        gap: 24px;
+        background: #ffffff;
+      }
+
+      .slide h1 {
+        max-width: 920px;
+        margin: 0;
+        font-size: 64px;
+        line-height: 1.02;
+        letter-spacing: 0;
+      }
+
+      .slide p {
+        max-width: 760px;
+        margin: 0;
+        color: #52636b;
+        font-size: 24px;
+        line-height: 1.38;
+      }
+
+      .split {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 28px;
+      }
+
+      .panel {
+        min-height: 220px;
+        padding: 28px;
+        border: 1px solid #dfe6ea;
+        display: grid;
+        align-content: end;
+      }
+
+      .panel strong {
+        display: block;
+        margin-bottom: 10px;
+        font-size: 26px;
+      }
+
+      .notes {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="deck" data-aspect-ratio="16:9">
+      <section class="slide" data-title="Cover">
+        <h1>HtmlPPT opens like a real presentation.</h1>
+        <p>No browser chrome, plus speaker notes and presenter mode.</p>
+        <aside class="notes">Start with the problem: browser tabs and address bars break the presentation feeling.</aside>
+      </section>
+
+      <section class="slide" data-title="Presenter Mode">
+        <h1>Presenter mode separates audience and speaker.</h1>
+        <div class="split">
+          <div class="panel">
+            <strong>Audience</strong>
+            <p>Only the current slide is projected fullscreen.</p>
+          </div>
+          <div class="panel">
+            <strong>Speaker</strong>
+            <p>Notes, timer, controls, and slide thumbnails stay on the main screen.</p>
+          </div>
+        </div>
+        <aside class="notes">Emphasize that .notes is stripped from projected slide HTML before rendering.</aside>
+      </section>
+    </main>
+  </body>
+</html>

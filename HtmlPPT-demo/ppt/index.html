@@ -1,0 +1,1230 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HtmlPPT Player Demo - Stagecraft</title>
+    <style>
+      :root {
+        --black: #050505;
+        --ink: #121416;
+        --ivory: #f3efe6;
+        --paper: #fbf8ef;
+        --bone: #d9d1c1;
+        --steel: #71808a;
+        --cyan: #44d7e7;
+        --blue: #1e4cff;
+        --red: #ff3d5a;
+        --amber: #f6b44b;
+        --green: #6cda99;
+        --violet: #8e6bff;
+        --grid: rgba(243, 239, 230, 0.13);
+        --dark-line: rgba(18, 20, 22, 0.12);
+        --ease: cubic-bezier(0.16, 1, 0.3, 1);
+        --font: Avenir Next, Helvetica Neue, Helvetica, Arial, sans-serif;
+        --mono: SF Mono, Menlo, Monaco, Consolas, monospace;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+        background: var(--black);
+        color: var(--ivory);
+        font-family: var(--font);
+        text-rendering: geometricPrecision;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .deck {
+        width: 100%;
+      }
+
+      .slide {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+        height: 100dvh;
+        overflow: hidden;
+        padding: clamp(34px, 6.2vh, 68px) clamp(48px, 8vh, 92px);
+        display: grid;
+        isolation: isolate;
+        background: var(--black);
+      }
+
+      .notes {
+        display: none;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+
+      h1,
+      h2 {
+        letter-spacing: 0;
+        font-weight: 760;
+      }
+
+      h1 {
+        font-size: clamp(58px, 12.4vh, 112px);
+        line-height: 0.9;
+      }
+
+      h2 {
+        font-size: clamp(42px, 8.4vh, 78px);
+        line-height: 0.94;
+      }
+
+      h3 {
+        font-size: clamp(20px, 3.1vh, 30px);
+        line-height: 1.08;
+        letter-spacing: 0;
+        font-weight: 760;
+      }
+
+      p {
+        color: rgba(243, 239, 230, 0.7);
+        font-size: clamp(16px, 2.55vh, 24px);
+        line-height: 1.36;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        color: var(--cyan);
+        font-family: var(--mono);
+        font-size: clamp(10px, 1.55vh, 13px);
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0;
+      }
+
+      .eyebrow::before {
+        content: "";
+        width: 42px;
+        height: 2px;
+        background: currentColor;
+      }
+
+      .meta {
+        color: rgba(243, 239, 230, 0.46);
+        font-family: var(--mono);
+        font-size: clamp(10px, 1.45vh, 12px);
+        font-weight: 780;
+        text-transform: uppercase;
+        letter-spacing: 0;
+      }
+
+      .reveal {
+        opacity: 0;
+        transform: translateY(22px);
+        animation: rise 760ms var(--ease) forwards;
+      }
+
+      .d1 {
+        animation-delay: 120ms;
+      }
+
+      .d2 {
+        animation-delay: 240ms;
+      }
+
+      .d3 {
+        animation-delay: 360ms;
+      }
+
+      .d4 {
+        animation-delay: 480ms;
+      }
+
+      /* 01 Cover: cinematic stage */
+      .cover {
+        align-content: center;
+        background:
+          linear-gradient(90deg, rgba(255, 61, 90, 0.12), transparent 22%, transparent 78%, rgba(68, 215, 231, 0.12)),
+          radial-gradient(ellipse at 50% 115%, rgba(246, 180, 75, 0.22), transparent 48%),
+          var(--black);
+      }
+
+      .cover::before {
+        content: "";
+        position: absolute;
+        left: 50%;
+        bottom: -18vh;
+        width: 120vw;
+        height: 52vh;
+        transform: translateX(-50%) perspective(700px) rotateX(62deg);
+        transform-origin: center bottom;
+        background-image:
+          linear-gradient(var(--grid) 1px, transparent 1px),
+          linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+        background-size: 7.5vh 7.5vh;
+        opacity: 0.9;
+      }
+
+      .cover::after {
+        content: "H";
+        position: absolute;
+        right: clamp(42px, 8vh, 86px);
+        top: clamp(38px, 7vh, 70px);
+        width: clamp(86px, 15vh, 138px);
+        height: clamp(86px, 15vh, 138px);
+        display: grid;
+        place-items: center;
+        border-radius: 26px;
+        color: #bff8ff;
+        font-size: clamp(42px, 8vh, 76px);
+        font-weight: 900;
+        background:
+          linear-gradient(135deg, rgba(255, 255, 255, 0.14), transparent 48%),
+          #151b1f;
+        box-shadow:
+          0 26px 80px rgba(0, 0, 0, 0.45),
+          0 0 70px rgba(68, 215, 231, 0.2);
+      }
+
+      .cover-block {
+        position: relative;
+        max-width: 980px;
+        display: grid;
+        gap: clamp(18px, 3.2vh, 28px);
+      }
+
+      .cover-title {
+        max-width: 900px;
+      }
+
+      .cover-title span {
+        color: transparent;
+        -webkit-text-stroke: 1px rgba(243, 239, 230, 0.72);
+      }
+
+      .cover-subtitle {
+        max-width: 660px;
+      }
+
+      .tag-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .tag {
+        min-height: 32px;
+        padding: 8px 12px;
+        display: inline-flex;
+        align-items: center;
+        border: 1px solid rgba(243, 239, 230, 0.18);
+        color: rgba(243, 239, 230, 0.78);
+        background: rgba(255, 255, 255, 0.055);
+        font-family: var(--mono);
+        font-size: clamp(10px, 1.5vh, 12px);
+        font-weight: 760;
+      }
+
+      /* 02 Deconstruction: browser chrome as crime scene */
+      .deconstruct {
+        grid-template-columns: 0.86fr 1.14fr;
+        gap: clamp(28px, 7vh, 72px);
+        align-items: center;
+        background:
+          linear-gradient(135deg, #101113, #050505 58%),
+          var(--black);
+      }
+
+      .browser-evidence {
+        position: relative;
+        height: min(66vh, 500px);
+        border: 1px solid rgba(243, 239, 230, 0.18);
+        background: #f4f1e8;
+        color: var(--ink);
+        box-shadow: 0 36px 100px rgba(0, 0, 0, 0.44);
+        transform: rotate(-1.5deg);
+      }
+
+      .browser-evidence::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border: 3px solid var(--red);
+        clip-path: polygon(2% 9%, 63% 9%, 63% 22%, 2% 22%);
+        animation: evidence 2.6s ease-in-out infinite;
+      }
+
+      .browser-top {
+        height: 58px;
+        display: grid;
+        grid-template-columns: 74px 1fr;
+        gap: 14px;
+        align-items: center;
+        padding: 0 16px;
+        border-bottom: 1px solid rgba(18, 20, 22, 0.16);
+      }
+
+      .traffic {
+        display: flex;
+        gap: 7px;
+      }
+
+      .traffic i {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: var(--red);
+      }
+
+      .traffic i:nth-child(2) {
+        background: var(--amber);
+      }
+
+      .traffic i:nth-child(3) {
+        background: var(--green);
+      }
+
+      .address {
+        height: 26px;
+        border-radius: 999px;
+        background: rgba(18, 20, 22, 0.08);
+      }
+
+      .fake-slide {
+        height: calc(100% - 58px);
+        padding: 46px;
+        display: grid;
+        align-content: center;
+        gap: 20px;
+      }
+
+      .fake-slide strong {
+        font-size: clamp(36px, 6.2vh, 58px);
+        line-height: 0.98;
+      }
+
+      .fake-lines {
+        display: grid;
+        gap: 10px;
+      }
+
+      .fake-lines i {
+        height: 12px;
+        background: rgba(18, 20, 22, 0.16);
+      }
+
+      .callouts {
+        display: grid;
+        gap: 18px;
+      }
+
+      .callout {
+        display: grid;
+        grid-template-columns: 52px 1fr;
+        gap: 16px;
+        align-items: start;
+      }
+
+      .callout b {
+        color: var(--red);
+        font-family: var(--mono);
+        font-size: clamp(18px, 2.8vh, 26px);
+      }
+
+      .callout p {
+        max-width: 540px;
+      }
+
+      /* 03 Protocol: premium print sheet */
+      .protocol {
+        align-content: stretch;
+        color: var(--ink);
+        background: var(--paper);
+        padding: clamp(28px, 5vh, 54px);
+      }
+
+      .spec-sheet {
+        position: relative;
+        height: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1.15fr;
+        border: 1px solid var(--dark-line);
+        background:
+          linear-gradient(90deg, transparent 49.8%, var(--dark-line) 49.8%, var(--dark-line) 50.2%, transparent 50.2%),
+          var(--paper);
+      }
+
+      .spec-left,
+      .spec-right {
+        padding: clamp(34px, 6vh, 66px);
+        display: grid;
+        align-content: space-between;
+      }
+
+      .huge-token {
+        font-family: var(--mono);
+        font-size: clamp(70px, 16vh, 142px);
+        font-weight: 900;
+        line-height: 0.82;
+        color: var(--blue);
+      }
+
+      .protocol .eyebrow {
+        color: var(--blue);
+      }
+
+      .mini-specs {
+        display: grid;
+        gap: 12px;
+      }
+
+      .mini-spec {
+        display: grid;
+        grid-template-columns: 100px 1fr;
+        gap: 16px;
+        padding-top: 14px;
+        border-top: 1px solid var(--dark-line);
+      }
+
+      .mini-spec b {
+        font-family: var(--mono);
+        font-size: clamp(13px, 2vh, 18px);
+      }
+
+      .mini-spec span {
+        color: #596166;
+        font-size: clamp(13px, 1.9vh, 17px);
+        line-height: 1.32;
+      }
+
+      .protocol p {
+        color: #596166;
+      }
+
+      /* 04 Code Theater */
+      .code-theater {
+        grid-template-columns: 0.95fr 1.05fr;
+        gap: clamp(28px, 6vh, 68px);
+        align-items: center;
+        background:
+          linear-gradient(90deg, rgba(68, 215, 231, 0.08), transparent 34%),
+          #090b0c;
+      }
+
+      .code-stage {
+        position: relative;
+        min-height: min(64vh, 490px);
+        padding: clamp(24px, 4vh, 42px);
+        border: 1px solid rgba(243, 239, 230, 0.15);
+        background:
+          linear-gradient(rgba(243, 239, 230, 0.04) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(243, 239, 230, 0.04) 1px, transparent 1px),
+          #050606;
+        background-size: 26px 26px;
+        box-shadow: 0 36px 90px rgba(0, 0, 0, 0.42);
+      }
+
+      .code-stage::before {
+        content: "";
+        position: absolute;
+        inset: 14px;
+        border: 1px solid rgba(68, 215, 231, 0.32);
+        pointer-events: none;
+      }
+
+      pre {
+        margin: 0;
+        color: #e6fbff;
+        font-family: var(--mono);
+        font-size: clamp(15px, 2.28vh, 21px);
+        line-height: 1.56;
+        white-space: pre-wrap;
+      }
+
+      .cyan {
+        color: var(--cyan);
+      }
+
+      .amber {
+        color: var(--amber);
+      }
+
+      .violet {
+        color: #b8a6ff;
+      }
+
+      .code-caption {
+        position: absolute;
+        right: 24px;
+        bottom: 20px;
+        color: rgba(243, 239, 230, 0.34);
+        font-family: var(--mono);
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      /* 05 Modes: physical projection room */
+      .projection {
+        align-content: stretch;
+        padding: 0;
+        background: #050505;
+      }
+
+      .projection-room {
+        position: relative;
+        height: 100%;
+        display: grid;
+        grid-template-rows: 1fr 34%;
+      }
+
+      .projection-room::before {
+        content: "";
+        position: absolute;
+        left: 10%;
+        right: 10%;
+        top: 10%;
+        height: 42%;
+        background:
+          linear-gradient(135deg, rgba(68, 215, 231, 0.15), transparent),
+          #f4f1e8;
+        transform: perspective(900px) rotateX(2deg);
+        box-shadow:
+          0 0 0 1px rgba(255, 255, 255, 0.14),
+          0 32px 90px rgba(68, 215, 231, 0.16);
+      }
+
+      .projection-room::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 45%;
+        background:
+          linear-gradient(rgba(243, 239, 230, 0.09) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(243, 239, 230, 0.09) 1px, transparent 1px);
+        background-size: 70px 70px;
+        transform: perspective(800px) rotateX(62deg);
+        transform-origin: center bottom;
+      }
+
+      .mode-copy {
+        z-index: 2;
+        align-self: end;
+        max-width: 820px;
+        padding: clamp(44px, 7vh, 76px) clamp(54px, 8vh, 92px);
+        display: grid;
+        gap: 18px;
+      }
+
+      .mode-rail {
+        z-index: 2;
+        align-self: end;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        border-top: 1px solid rgba(243, 239, 230, 0.16);
+      }
+
+      .mode-panel {
+        min-height: 100%;
+        padding: clamp(22px, 4vh, 42px) clamp(40px, 6vh, 70px);
+        display: grid;
+        grid-template-columns: 100px 1fr;
+        gap: 22px;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.04);
+        border-right: 1px solid rgba(243, 239, 230, 0.16);
+      }
+
+      .mode-panel b {
+        color: var(--cyan);
+        font-family: var(--mono);
+        font-size: clamp(18px, 3vh, 28px);
+      }
+
+      .mode-panel p {
+        font-size: clamp(15px, 2.1vh, 20px);
+      }
+
+      /* 06 Presenter console */
+      .console {
+        grid-template-columns: 1.08fr 0.92fr;
+        gap: clamp(22px, 4.8vh, 54px);
+        align-items: center;
+        color: var(--ink);
+        background: #e9edf0;
+      }
+
+      .console p {
+        color: #53606a;
+      }
+
+      .console .eyebrow {
+        color: var(--blue);
+      }
+
+      .console-window {
+        min-height: min(67vh, 500px);
+        display: grid;
+        grid-template-columns: 1fr 0.34fr;
+        grid-template-rows: 0.68fr 0.32fr;
+        border: 1px solid rgba(18, 20, 22, 0.14);
+        background: #fbfcfc;
+        box-shadow: 0 36px 80px rgba(18, 20, 22, 0.16);
+      }
+
+      .console-current {
+        grid-column: 1;
+        grid-row: 1;
+        padding: 26px;
+        display: grid;
+        align-content: center;
+        border-right: 1px solid rgba(18, 20, 22, 0.1);
+        border-bottom: 1px solid rgba(18, 20, 22, 0.1);
+      }
+
+      .console-current div {
+        height: 100%;
+        min-height: 220px;
+        display: grid;
+        place-items: center;
+        color: #f5f7f8;
+        background: #101416;
+        font-family: var(--mono);
+        font-size: clamp(18px, 3vh, 28px);
+        font-weight: 900;
+      }
+
+      .console-side {
+        grid-column: 2;
+        grid-row: 1 / 3;
+        padding: 18px;
+        display: grid;
+        gap: 12px;
+        align-content: start;
+        background: #f2f5f5;
+      }
+
+      .console-thumb {
+        height: 78px;
+        border: 1px solid rgba(18, 20, 22, 0.14);
+        background: #ffffff;
+      }
+
+      .console-thumb.active {
+        border: 3px solid var(--blue);
+      }
+
+      .console-notes {
+        grid-column: 1;
+        grid-row: 2;
+        padding: 26px;
+        display: grid;
+        align-content: center;
+        color: #53606a;
+        font-size: clamp(16px, 2.35vh, 22px);
+        line-height: 1.35;
+      }
+
+      /* 07 X-ray notes */
+      .xray {
+        align-content: center;
+        background:
+          linear-gradient(90deg, #f5f1e8 0 50%, #070a0c 50% 100%);
+        color: var(--ink);
+      }
+
+      .xray-layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0;
+        min-height: min(67vh, 510px);
+        border: 1px solid rgba(18, 20, 22, 0.12);
+      }
+
+      .xray-side {
+        padding: clamp(32px, 6vh, 62px);
+        display: grid;
+        align-content: space-between;
+      }
+
+      .xray-side.dark {
+        color: var(--ivory);
+        border-left: 1px solid rgba(243, 239, 230, 0.16);
+      }
+
+      .xray-side.dark p {
+        color: rgba(243, 239, 230, 0.68);
+      }
+
+      .xray-side .eyebrow {
+        color: var(--red);
+      }
+
+      .xray-side.dark .eyebrow {
+        color: var(--cyan);
+      }
+
+      .dom-strip {
+        display: grid;
+        gap: 10px;
+        font-family: var(--mono);
+        font-size: clamp(13px, 2vh, 18px);
+        line-height: 1.35;
+      }
+
+      .dom-line {
+        padding: 10px 12px;
+        border: 1px solid currentColor;
+        color: rgba(18, 20, 22, 0.58);
+      }
+
+      .xray-side.dark .dom-line {
+        color: rgba(243, 239, 230, 0.6);
+      }
+
+      .dom-line.removed {
+        color: var(--red);
+        text-decoration: line-through;
+      }
+
+      /* 08 Agent skill as command card */
+      .skill {
+        align-content: center;
+        color: var(--ink);
+        background:
+          linear-gradient(90deg, rgba(30, 76, 255, 0.1), transparent 32%),
+          var(--paper);
+      }
+
+      .skill-layout {
+        display: grid;
+        grid-template-columns: 0.9fr 1.1fr;
+        gap: clamp(26px, 6vh, 70px);
+        align-items: center;
+      }
+
+      .skill .eyebrow {
+        color: var(--blue);
+      }
+
+      .skill p {
+        color: #56636b;
+      }
+
+      .command-sheet {
+        position: relative;
+        min-height: min(64vh, 480px);
+        padding: clamp(28px, 5vh, 54px);
+        background: #111416;
+        color: var(--ivory);
+        box-shadow: 22px 22px 0 var(--blue);
+        overflow: hidden;
+      }
+
+      .command-sheet::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(243, 239, 230, 0.07) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(243, 239, 230, 0.07) 1px, transparent 1px);
+        background-size: 32px 32px;
+      }
+
+      .command-lines {
+        position: relative;
+        display: grid;
+        gap: 18px;
+        font-family: var(--mono);
+      }
+
+      .command {
+        padding-bottom: 16px;
+        border-bottom: 1px solid rgba(243, 239, 230, 0.18);
+        font-size: clamp(15px, 2.25vh, 21px);
+        line-height: 1.4;
+      }
+
+      .command b {
+        color: var(--cyan);
+      }
+
+      /* 09 Visual freedom: kinetic poster */
+      .kinetic {
+        align-content: center;
+        background: #f5f1e8;
+        color: var(--ink);
+      }
+
+      .kinetic p {
+        color: #56636b;
+      }
+
+      .kinetic-stage {
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        overflow: hidden;
+      }
+
+      .bar {
+        position: absolute;
+        height: clamp(42px, 8vh, 76px);
+        width: 72vw;
+        left: -18vw;
+        transform: rotate(-16deg);
+        opacity: 0.96;
+        animation: slidebar 8s ease-in-out infinite;
+      }
+
+      .bar.one {
+        top: 15%;
+        background: var(--blue);
+      }
+
+      .bar.two {
+        top: 39%;
+        background: var(--red);
+        animation-delay: -2s;
+      }
+
+      .bar.three {
+        top: 63%;
+        background: var(--amber);
+        animation-delay: -4s;
+      }
+
+      .kinetic-copy {
+        max-width: 680px;
+        display: grid;
+        gap: 22px;
+        background: rgba(245, 241, 232, 0.82);
+        padding: clamp(26px, 5vh, 54px);
+        border: 1px solid rgba(18, 20, 22, 0.14);
+        backdrop-filter: blur(10px);
+      }
+
+      /* 10 Package */
+      .package {
+        align-content: center;
+        background:
+          linear-gradient(135deg, #0b0d10, #15120d);
+      }
+
+      .package-layout {
+        display: grid;
+        grid-template-columns: 1.06fr 0.94fr;
+        gap: clamp(30px, 7vh, 76px);
+        align-items: center;
+      }
+
+      .file-object {
+        position: relative;
+        height: min(68vh, 510px);
+        background: #f7f2e8;
+        color: var(--ink);
+        clip-path: polygon(0 0, 78% 0, 100% 22%, 100% 100%, 0 100%);
+        box-shadow: 0 34px 90px rgba(0, 0, 0, 0.38);
+        padding: clamp(34px, 6vh, 62px);
+        display: grid;
+        align-content: space-between;
+      }
+
+      .file-object::after {
+        content: "";
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 22%;
+        aspect-ratio: 1;
+        background: rgba(18, 20, 22, 0.09);
+      }
+
+      .file-name {
+        font-family: var(--mono);
+        font-size: clamp(20px, 3.5vh, 34px);
+        font-weight: 900;
+      }
+
+      .file-label {
+        display: grid;
+        gap: 10px;
+      }
+
+      .file-label span {
+        height: 12px;
+        background: rgba(18, 20, 22, 0.15);
+      }
+
+      .file-label span:nth-child(1) {
+        width: 70%;
+      }
+
+      .file-label span:nth-child(2) {
+        width: 48%;
+      }
+
+      .seal {
+        width: clamp(92px, 16vh, 140px);
+        aspect-ratio: 1;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        border: 2px solid var(--blue);
+        color: var(--blue);
+        font-family: var(--mono);
+        font-weight: 900;
+        font-size: clamp(13px, 2vh, 18px);
+      }
+
+      /* 11 Closing */
+      .closing {
+        align-content: center;
+        background:
+          linear-gradient(90deg, var(--black) 0 60%, var(--ivory) 60% 100%);
+      }
+
+      .closing-grid {
+        display: grid;
+        grid-template-columns: 60fr 40fr;
+        min-height: min(68vh, 520px);
+      }
+
+      .closing-left {
+        display: grid;
+        align-content: center;
+        gap: 22px;
+        padding-right: clamp(26px, 5vh, 58px);
+      }
+
+      .closing-right {
+        color: var(--ink);
+        padding: clamp(34px, 6vh, 68px) clamp(42px, 7vh, 78px);
+        display: grid;
+        align-content: space-between;
+      }
+
+      .closing-mark {
+        width: clamp(100px, 18vh, 150px);
+        aspect-ratio: 1;
+        display: grid;
+        place-items: center;
+        background: var(--black);
+        color: #bff8ff;
+        font-size: clamp(52px, 9vh, 82px);
+        font-weight: 900;
+      }
+
+      .closing-right p {
+        color: #4d565b;
+      }
+
+      @keyframes rise {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes evidence {
+        50% {
+          clip-path: polygon(2% 9%, 98% 9%, 98% 22%, 2% 22%);
+        }
+      }
+
+      @keyframes slidebar {
+        0%,
+        100% {
+          transform: translateX(-4vw) rotate(-16deg);
+        }
+        50% {
+          transform: translateX(22vw) rotate(-16deg);
+        }
+      }
+
+      @media (max-height: 700px) {
+        .slide {
+          padding: 28px 46px;
+        }
+
+        h1 {
+          font-size: clamp(48px, 11vh, 86px);
+        }
+
+        h2 {
+          font-size: clamp(36px, 7.6vh, 62px);
+        }
+
+        p {
+          font-size: clamp(14px, 2.35vh, 20px);
+        }
+
+        .browser-evidence,
+        .code-stage,
+        .console-window,
+        .file-object {
+          min-height: 0;
+          height: 58vh;
+        }
+      }
+
+      @media (max-height: 600px) {
+        .tag-row,
+        .meta.optional,
+        .code-caption {
+          display: none;
+        }
+
+        .mode-panel {
+          padding: 18px 34px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.2s !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="deck" data-aspect-ratio="16:9">
+      <section class="slide cover" data-title="Stagecraft">
+        <div class="cover-block">
+          <div class="eyebrow reveal">HtmlPPT Player / Public Demo</div>
+          <h1 class="cover-title reveal d1">HTML decks need <span>stagecraft</span>.</h1>
+          <p class="cover-subtitle reveal d2">
+            A desktop player that turns agent-made HTML into a real presentation moment: fullscreen, notes, projection, and zero browser chrome.
+          </p>
+          <div class="tag-row reveal d3">
+            <span class="tag">.deck</span>
+            <span class="tag">.slide</span>
+            <span class="tag">.notes</span>
+            <span class="tag">local-first</span>
+            <span class="tag">presenter mode</span>
+          </div>
+        </div>
+        <aside class="notes">Open with the emotional promise: HTML is powerful, but presentation needs a stage, not a browser tab.</aside>
+      </section>
+
+      <section class="slide deconstruct" data-title="Browser Problem">
+        <div class="browser-evidence reveal">
+          <div class="browser-top">
+            <div class="traffic"><i></i><i></i><i></i></div>
+            <div class="address"></div>
+          </div>
+          <div class="fake-slide">
+            <strong>Presentation, interrupted.</strong>
+            <div class="fake-lines">
+              <i style="width: 92%"></i>
+              <i style="width: 74%"></i>
+              <i style="width: 58%"></i>
+            </div>
+          </div>
+        </div>
+        <div class="callouts">
+          <div class="eyebrow reveal">The Problem</div>
+          <h2 class="reveal d1">The browser frame keeps stealing the room.</h2>
+          <div class="callout reveal d2">
+            <b>01</b>
+            <p>Tabs, URLs, extensions, and page chrome make a polished HTML deck feel like a preview.</p>
+          </div>
+          <div class="callout reveal d3">
+            <b>02</b>
+            <p>There is no proper separation between the audience screen and the speaker's private context.</p>
+          </div>
+        </div>
+        <aside class="notes">This slide should feel like an annotated object, not a generic before-after card.</aside>
+      </section>
+
+      <section class="slide protocol" data-title="Tiny Protocol">
+        <div class="spec-sheet">
+          <div class="spec-left">
+            <div>
+              <div class="eyebrow reveal">Protocol</div>
+              <div class="huge-token reveal d1">3<br />TOKENS</div>
+            </div>
+            <p class="reveal d2">The format is deliberately tiny so agents can follow it reliably.</p>
+          </div>
+          <div class="spec-right">
+            <h2 class="reveal d1">A presentation contract, not a new slide language.</h2>
+            <div class="mini-specs reveal d2">
+              <div class="mini-spec"><b>.deck</b><span>Wraps the file and declares the 16:9 presentation canvas.</span></div>
+              <div class="mini-spec"><b>.slide</b><span>One page. One viewport. One audience-rendered unit.</span></div>
+              <div class="mini-spec"><b>.notes</b><span>Speaker-only cues extracted before projection.</span></div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">Explain that the simplicity is the point. Agents can be creative with HTML, while the protocol remains stable.</aside>
+      </section>
+
+      <section class="slide code-theater" data-title="Markup">
+        <div class="reveal">
+          <div class="eyebrow">Authoring Surface</div>
+          <h2 class="d1">A readable HTML file is the source of truth.</h2>
+          <p class="d2">No build system, no slide compiler, no custom runtime. Just semantic sections the player understands.</p>
+        </div>
+        <div class="code-stage reveal d2">
+          <pre><span class="cyan">&lt;main</span> class=<span class="amber">"deck"</span> data-aspect-ratio=<span class="amber">"16:9"</span><span class="cyan">&gt;</span>
+  <span class="cyan">&lt;section</span> class=<span class="amber">"slide"</span> data-title=<span class="amber">"Opening"</span><span class="cyan">&gt;</span>
+    <span class="violet">&lt;h1&gt;</span>Visible slide<span class="violet">&lt;/h1&gt;</span>
+    <span class="cyan">&lt;aside</span> class=<span class="amber">"notes"</span><span class="cyan">&gt;</span>
+      Private speaker cue.
+    <span class="cyan">&lt;/aside&gt;</span>
+  <span class="cyan">&lt;/section&gt;</span>
+<span class="cyan">&lt;/main&gt;</span></pre>
+          <div class="code-caption">HTMLPPT / MINIMAL CONTRACT</div>
+        </div>
+        <aside class="notes">Keep the explanation technical and crisp: the player parses slides, preserves head styles, and strips notes for audience rendering.</aside>
+      </section>
+
+      <section class="slide projection" data-title="Play and Presenter">
+        <div class="projection-room">
+          <div class="mode-copy">
+            <div class="eyebrow reveal">Playback Modes</div>
+            <h2 class="reveal d1">Two modes, two room behaviors.</h2>
+          </div>
+          <div class="mode-rail reveal d2">
+            <div class="mode-panel">
+              <b>PLAY</b>
+              <p>Main screen and projector show the same current slide.</p>
+            </div>
+            <div class="mode-panel">
+              <b>PRESENTER</b>
+              <p>Audience sees only the slide. Speaker keeps notes and control.</p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">Use this slide to make the Play vs Presenter distinction memorable: mirror the show, or separate the room.</aside>
+      </section>
+
+      <section class="slide console" data-title="Presenter Console">
+        <div class="console-window reveal">
+          <div class="console-current"><div>CURRENT SLIDE</div></div>
+          <div class="console-side">
+            <div class="console-thumb active"></div>
+            <div class="console-thumb"></div>
+            <div class="console-thumb"></div>
+            <div class="console-thumb"></div>
+          </div>
+          <div class="console-notes">Opening cue: frame HTMLPPT as a stage for AI-generated presentation files.</div>
+        </div>
+        <div class="reveal d1">
+          <div class="eyebrow">Presenter View</div>
+          <h2>Private context stays private.</h2>
+          <p>The projected window contains no notes, no thumbnails, no controls. The speaker window keeps everything needed to perform.</p>
+        </div>
+        <aside class="notes">This is the feature that makes the tool feel like PowerPoint-style presenting rather than browser playback.</aside>
+      </section>
+
+      <section class="slide xray" data-title="Notes Safety">
+        <div class="xray-layout">
+          <div class="xray-side">
+            <div>
+              <div class="eyebrow reveal">Source HTML</div>
+              <h2 class="reveal d1">Author with notes.</h2>
+            </div>
+            <div class="dom-strip reveal d2">
+              <div class="dom-line">&lt;section class="slide"&gt;</div>
+              <div class="dom-line">&lt;h1&gt;Visible&lt;/h1&gt;</div>
+              <div class="dom-line removed">&lt;aside class="notes"&gt;Private&lt;/aside&gt;</div>
+            </div>
+          </div>
+          <div class="xray-side dark">
+            <div>
+              <div class="eyebrow reveal">Audience DOM</div>
+              <h2 class="reveal d1">Project without notes.</h2>
+            </div>
+            <div class="dom-strip reveal d2">
+              <div class="dom-line">&lt;section class="slide"&gt;</div>
+              <div class="dom-line">&lt;h1&gt;Visible&lt;/h1&gt;</div>
+              <div class="dom-line">&lt;!-- notes removed --&gt;</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">This explains why the skill insists that notes must be actual .notes nodes, not visually hidden elements.</aside>
+      </section>
+
+      <section class="slide skill" data-title="Agent Skill">
+        <div class="skill-layout">
+          <div>
+            <div class="eyebrow reveal">Agent Skill</div>
+            <h2 class="reveal d1">The player ships with instructions for the agents that create decks.</h2>
+            <p class="reveal d2">Open source is not just code. It is a format, a skill, and examples that teach the ecosystem how to produce compatible files.</p>
+          </div>
+          <div class="command-sheet reveal d2">
+            <div class="command-lines">
+              <div class="command"><b>$htmlppt</b> create a single-file HTML presentation.</div>
+              <div class="command">Use <b>.deck</b>, <b>.slide</b>, and <b>.notes</b>.</div>
+              <div class="command">Keep each slide inside a 16:9 non-scrolling frame.</div>
+              <div class="command">Let the player own projection and controls.</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">The skill is part of the product strategy: it turns agent output into predictable input for the player.</aside>
+      </section>
+
+      <section class="slide kinetic" data-title="Visual Freedom">
+        <div class="kinetic-stage" aria-hidden="true">
+          <div class="bar one"></div>
+          <div class="bar two"></div>
+          <div class="bar three"></div>
+        </div>
+        <div class="kinetic-copy reveal">
+          <div class="eyebrow">Visual Surface</div>
+          <h2>HTML keeps the ceiling high.</h2>
+          <p>Typography, CSS motion, SVG, WebGL, local media, charts, and custom layouts can all live inside the same presentation file.</p>
+        </div>
+        <aside class="notes">This is a demo promise: the format does not limit design ambition. The player only provides the stage.</aside>
+      </section>
+
+      <section class="slide package" data-title="Local File">
+        <div class="package-layout">
+          <div class="file-object reveal">
+            <div class="file-name">demo.html</div>
+            <div class="file-label">
+              <span></span>
+              <span></span>
+            </div>
+            <div class="seal">LOCAL<br />FIRST</div>
+          </div>
+          <div>
+            <div class="eyebrow reveal">Distribution</div>
+            <h2 class="reveal d1">A presentation can be a file again.</h2>
+            <p class="reveal d2">Drag it in, open it from the app, pass it through git, generate it with an agent, or ship it in a repo as a demo artifact.</p>
+          </div>
+        </div>
+        <aside class="notes">Reinforce the open source angle: decks are inspectable, portable, local files.</aside>
+      </section>
+
+      <section class="slide closing" data-title="Closing">
+        <div class="closing-grid">
+          <div class="closing-left">
+            <div class="eyebrow reveal">HtmlPPT Player</div>
+            <h1 class="reveal d1">Open the file. Own the room.</h1>
+            <p class="reveal d2">A tiny protocol, a desktop stage, and a cleaner path from agent output to live presentation.</p>
+          </div>
+          <div class="closing-right reveal d2">
+            <div class="closing-mark">H</div>
+            <p>Built for people who want HTML decks to feel as deliberate as the ideas inside them.</p>
+            <div class="meta">.deck / .slide / .notes</div>
+          </div>
+        </div>
+        <aside class="notes">Close with a direct call: this is about making HTML presentations feel intentional, not experimental.</aside>
+      </section>
+    </main>
+  </body>
+</html>

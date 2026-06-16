@@ -1,0 +1,63 @@
+{
+  "name": "htmlppt-player",
+  "version": "0.1.0",
+  "description": "Desktop player for HTML presentation decks with presenter mode.",
+  "license": "Apache-2.0",
+  "main": "out/main/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "electron-vite dev",
+    "build": "tsc --noEmit && electron-vite build",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "preview": "electron-vite preview",
+    "pack:mac": "npm run build && electron-builder --mac --dir",
+    "dist:mac": "npm run build && electron-builder --mac dmg"
+  },
+  "build": {
+    "appId": "app.htmlppt.player",
+    "productName": "HtmlPPT Player",
+    "electronDist": "node_modules/electron/dist",
+    "electronVersion": "33.4.11",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "out/**"
+    ],
+    "mac": {
+      "category": "public.app-category.productivity",
+      "icon": "assets/icon/icon.icns",
+      "identity": null,
+      "target": [
+        "dir"
+      ]
+    },
+    "fileAssociations": [
+      {
+        "ext": "htmlppt",
+        "name": "HtmlPPT Deck",
+        "role": "Viewer"
+      }
+    ]
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
+    "@types/node": "^22.10.2",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^4.7.0",
+    "electron": "^33.4.11",
+    "electron-builder": "^24.13.3",
+    "electron-vite": "^3.1.0",
+    "jsdom": "^25.0.1",
+    "lucide-react": "^0.468.0",
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1",
+    "typescript": "^5.9.3",
+    "vite": "^5.4.21",
+    "vitest": "^2.1.9"
+  }
+}

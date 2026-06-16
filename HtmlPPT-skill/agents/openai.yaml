@@ -1,0 +1,4 @@
+interface:
+  display_name: "HtmlPPT Deck Builder"
+  short_description: "Create HtmlPPT decks for the player"
+  default_prompt: "Use $htmlppt to create a single-file HTML presentation deck for HtmlPPT Player."

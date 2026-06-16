@@ -1,0 +1,39 @@
+# macOS
+.DS_Store
+
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Build outputs
+out/
+dist/
+release/
+**/out/
+**/dist/
+**/release/
+
+# Temporary/generated files
+tmp/
+**/tmp/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment and local config
+.env
+.env.*
+!.env.example
+
+# Editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Screenshots and local captures
+*.local.png
+*.local.jpg
+*.local.jpeg
