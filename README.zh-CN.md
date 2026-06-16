@@ -2,13 +2,9 @@
 
 [English README](README.md)
 
-HtmlPPT Player 是一个面向 HTML 演示稿的桌面播放器。它让 AI agent 或人类生成一个普通的本地 `.html` 文件，然后像正式 PPT 一样演示：没有浏览器标签栏、地址栏、URL，也有演讲者备注和投屏分离。
+HtmlPPT Player 是一个用于演示本地 HTML 幻灯片的桌面应用。它可以打开 `.html` / `.htmlppt` 演示稿，并像正式 PPT 一样播放：没有浏览器标签栏、地址栏和 URL。
 
-这个项目包含三部分：
-
-- `HtmlPPT-Player`：Electron 桌面播放器。
-- `HtmlPPT-skill`：给 AI 编程 agent 使用的生成规范/技能，让它们产出兼容播放器的 HTMLPPT。
-- `HtmlPPT-demo`：公开演示 demo，展示一个高完成度 HTMLPPT 可以是什么样。
+它适合新的 AI 演示稿工作流：让 AI agent 生成一个单文件 HTML 演示稿，然后用 HtmlPPT Player 打开，获得全屏播放、演讲者备注、缩略图、计时器和投屏分离。
 
 ## 预览
 
@@ -18,40 +14,51 @@ HtmlPPT Player 是一个面向 HTML 演示稿的桌面播放器。它让 AI agen
 
 ![HtmlPPT Player 演讲者模式](docs/images/readme-presenter.png)
 
-## 为什么做
+## 下载
 
-AI 编程 agent 已经很擅长生成 HTML 演示稿，但真正汇报时会遇到几个尴尬问题：浏览器外壳会露出来，没有演讲者备注，投屏内容和演讲者控制区无法分离。
+从 GitHub Releases 下载最新版：
 
-HtmlPPT Player 要解决的是“上台演示”的最后一公里：
+```text
+https://github.com/chenggang928/htmlppt-player/releases/latest
+```
 
-- 打开本地 `.html`、`.htm`、`.htmlppt` 文件。
-- 全屏演示时没有浏览器外壳。
-- Play 模式下，当前屏幕和外接投屏显示同一页。
-- Presenter 模式下，投屏端只显示当前页，主屏显示备注、计时、缩略图和控制区。
-- 从 HTML 中提取演讲者备注，并在投屏端渲染前移除备注 DOM。
-- 支持本地 HTML 热加载，保留当前页和演示状态。
+当前提供：
 
-## 当前状态
+- macOS arm64：`.dmg`
+- Windows x64：`.exe` 安装器
 
-这是一个 MVP。第一版优先保证 macOS 可用，Electron 架构后续可以扩展到 Windows 和 Linux。
+目前安装包还没有签名。macOS Gatekeeper 或 Windows SmartScreen 第一次打开时可能会提示安全警告。
 
-目前已经支持：
+## 怎么使用
 
-- 文件选择、拖拽打开、命令行传入 deck。
-- `.deck / .slide / .notes` 标准解析。
-- 非标准 HTML fallback 为单页 deck。
-- Play 模式和 Presenter 模式。
-- 演讲者备注编辑，并写回本地文件。
-- 缩略图、计时、键盘翻页、热加载。
-- 通过 `electron-builder` 打包 macOS app。
+1. 下载并打开 HtmlPPT Player。
+2. 打开或拖入本地 `.html`、`.htm`、`.htmlppt` 演示稿。
+3. 使用按钮或键盘快捷键翻页。
+4. 点击 Play，从当前页开始全屏演示。
+5. 点击 Presenter，进入演讲者模式：主屏显示备注、计时和缩略图，投屏端只显示当前幻灯片。
 
-## HtmlPPT 格式
+快捷键：
+
+- `Right`、`Down`、`Space`、`PageDown`：下一页
+- `Left`、`Up`、`PageUp`：上一页
+- `Esc`：退出全屏、Play 模式或 Presenter 模式
+
+## 演示模式
+
+HtmlPPT Player 有两种演示模式：
+
+- Play 模式：当前屏幕进入全屏；如果有外接屏，外接屏显示同一页。
+- Presenter 模式：外接屏只显示当前页全屏内容；演讲者主屏保留备注、计时、控制按钮和全部缩略图。
+
+如果只有一个屏幕，Presenter 模式会进入排练布局。
+
+## 演示稿格式
 
 推荐格式非常小：
 
 ```html
 <main class="deck" data-aspect-ratio="16:9">
-  <section class="slide" data-title="Cover">
+  <section class="slide" data-title="封面">
     <h1>观众可见内容</h1>
     <aside class="notes">只给演讲者看的备注。</aside>
   </section>
@@ -60,32 +67,44 @@ HtmlPPT Player 要解决的是“上台演示”的最后一公里：
 
 规则：
 
-- 每一页使用一个 `<section class="slide">`。
-- 演讲者备注只放在当前页内部的 `<aside class="notes">`。
-- `data-title` 用于演讲者模式右侧缩略图标题。
+- 每页使用一个 `<section class="slide">`。
+- 演讲者备注放在当前页内部的 `<aside class="notes">`。
+- `data-title` 用于演讲者模式里的缩略图标题。
 - 默认使用 `data-aspect-ratio="16:9"`。
-- 每页应该是固定视口页面，不要做成滚动网页。
-- 不要用 CSS 隐藏私密备注；必须使用 `.notes`，播放器才会在投屏端移除它。
+- 不要用 CSS 隐藏私密备注；必须使用 `.notes`，播放器才会在投屏端移除备注。
 
-完整 agent 规范见 [HtmlPPT-skill/SKILL.md](HtmlPPT-skill/SKILL.md)。
+如果 HTML 文件里没有 `.slide`，播放器会把整个文件作为单页演示稿打开。
 
-## 快速开始
+## Demo
 
-### 下载应用
-
-普通用户建议直接从 GitHub Releases 下载最新打包版本：
+公开 demo 位于：
 
 ```text
-https://github.com/chenggang928/htmlppt-player/releases
+HtmlPPT-demo/ppt/index.html
 ```
 
-源码保存在这个仓库里。macOS `.dmg` 或压缩后的 app 等安装包应该作为
-GitHub Release 附件上传，不要提交到源码仓库。
+它是一个自包含本地 HTML 文件，不依赖远程资源。
 
-第一版公开 macOS 包可能还没有签名和 notarization。如果是这样，需要在
-Release Notes 里明确说明，用户第一次打开时 macOS 可能会出现安全提示。
+## Agent Skill
 
-### 从源码构建
+仓库内置了一个 agent skill，用于告诉 AI 编程 agent 如何生成兼容 HtmlPPT Player 的演示稿。
+
+安装到 Codex 风格的 skills 目录：
+
+```bash
+mkdir -p ~/.codex/skills
+cp -R HtmlPPT-skill ~/.codex/skills/htmlppt
+```
+
+然后可以这样要求 agent：
+
+```text
+Use $htmlppt to create a single-file HTML presentation deck for HtmlPPT Player.
+```
+
+完整规范见 [HtmlPPT-skill/SKILL.md](HtmlPPT-skill/SKILL.md)。
+
+## 开发者
 
 安装依赖：
 
@@ -100,101 +119,36 @@ npm install
 npm run dev
 ```
 
+运行测试：
+
+```bash
+npm test
+```
+
 构建：
 
 ```bash
 npm run build
 ```
 
-测试：
+打包：
 
 ```bash
-npm test
+npm run dist:mac      # macOS DMG
+npm run dist:win      # Windows 安装器，推荐在 Windows 或 GitHub Actions 上运行
+npm run dist:win:zip  # Windows 免安装 zip
 ```
 
-打包 macOS app 目录：
-
-```bash
-npm run pack:mac
-```
-
-生成 macOS release 安装包：
-
-```bash
-npm run dist:mac
-```
-
-在 Windows 或 GitHub Actions 上生成 Windows 安装器：
-
-```bash
-npm run dist:win
-```
-
-Windows `.exe` 安装器最推荐在 Windows 机器或仓库内置的 GitHub Actions
-workflow 上生成。macOS 可以尝试部分交叉打包目标，但安装器生成可能需要额外
-Windows 打包工具。
-
-生成 Windows 免安装 zip：
-
-```bash
-npm run dist:win:zip
-```
-
-在播放器中打开公开 demo：
-
-```text
-HtmlPPT-demo/ppt/index.html
-```
-
-## 键盘快捷键
-
-- `Right`、`Down`、`Space`、`PageDown`：下一页
-- `Left`、`Up`、`PageUp`：上一页
-- `Esc`：退出全屏、Play 模式或 Presenter 模式
-
-## 演示模式
-
-HtmlPPT Player 有两种演示模式：
-
-- Play 模式：当前屏幕进入全屏；如果存在外接屏，外接屏显示同一页内容。
-- Presenter 模式：外接屏只显示当前页全屏内容；主屏显示当前页预览、备注、计时、缩略图和控制按钮。
-
-如果只有一个屏幕，Presenter 模式会进入排练模式。
-
-## Agent Skill
-
-`HtmlPPT-skill` 目录可以复制到 agent 的 skills 目录，建议安装后的目录名为 `htmlppt`。
-
-示例：
-
-```bash
-mkdir -p ~/.codex/skills
-cp -R HtmlPPT-skill ~/.codex/skills/htmlppt
-```
-
-然后可以这样要求 agent：
-
-```text
-Use $htmlppt to create a single-file HTML presentation deck for HtmlPPT Player.
-```
-
-## Demo
-
-公开 demo 位于：
-
-```text
-HtmlPPT-demo/ppt/index.html
-```
-
-它是一个自包含 HTMLPPT 文件，不依赖远程资源，用于展示协议、演讲者备注、投屏安全渲染，以及 HTML 原生的视觉表现力。
+仓库内置的 GitHub Actions workflow 会在推送 `v*` tag 时自动构建 macOS 和 Windows release 包。
 
 ## 仓库结构
 
 ```text
 .
-├── HtmlPPT-Player/   # Electron + Vite + React + TypeScript 桌面播放器
+├── HtmlPPT-Player/   # Electron 桌面播放器
 ├── HtmlPPT-skill/    # 给 agent 使用的 HTMLPPT 生成规范
 ├── HtmlPPT-demo/     # 公开演示 deck
+├── docs/images/      # README 图片
 ├── README.md
 ├── README.zh-CN.md
 └── LICENSE
@@ -209,7 +163,8 @@ HtmlPPT deck 被视为本地可信文件。Electron 渲染窗口禁用 Node inte
 ## Roadmap
 
 - 签名和 notarized 的 macOS release。
-- Windows / Linux 打包。
+- 签名的 Windows release。
+- Linux 打包。
 - 更完善的文件关联和安装器流程。
 - PDF / 图片导出。
 - 遥控器或手机翻页。
