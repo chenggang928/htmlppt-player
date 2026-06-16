@@ -1,6 +1,6 @@
 {
   "name": "htmlppt-player",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Desktop player for HTML presentation decks with presenter mode.",
   "license": "Apache-2.0",
   "main": "out/main/index.js",
