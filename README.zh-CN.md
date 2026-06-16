@@ -181,7 +181,6 @@ HtmlPPT-demo/ppt/index.html
 ├── HtmlPPT-demo/     # 公开演示 deck
 ├── README.md
 ├── README.zh-CN.md
-├── OPEN_SOURCE_PLAN.md
 └── LICENSE
 ```
 

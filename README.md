@@ -182,7 +182,6 @@ It is a self-contained HTMLPPT deck with no remote assets. It demonstrates the p
 ├── HtmlPPT-demo/     # Public demo deck
 ├── README.md
 ├── README.zh-CN.md
-├── OPEN_SOURCE_PLAN.md
 └── LICENSE
 ```
 
