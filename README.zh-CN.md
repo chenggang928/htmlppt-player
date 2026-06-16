@@ -76,7 +76,7 @@ HtmlPPT Player 要解决的是“上台演示”的最后一公里：
 普通用户建议直接从 GitHub Releases 下载最新打包版本：
 
 ```text
-本仓库的 Releases 页面
+https://github.com/chenggang928/htmlppt-player/releases
 ```
 
 源码保存在这个仓库里。macOS `.dmg` 或压缩后的 app 等安装包应该作为

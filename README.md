@@ -76,7 +76,7 @@ See [HtmlPPT-skill/SKILL.md](HtmlPPT-skill/SKILL.md) for the full agent-facing s
 For most users, download the latest prebuilt app from GitHub Releases:
 
 ```text
-Releases page of this repository
+https://github.com/chenggang928/htmlppt-player/releases
 ```
 
 The source code lives in this repository. Release assets, such as macOS `.dmg`
